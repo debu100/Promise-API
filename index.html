@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Promise-API</title>
+  </head>
+  <body>
+    <script>
+      const p1 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("p1 resolved");
+        }, 2000);
+        resolve("p1 resolved");
+      });
+
+      const p2 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p2 rejected");
+        }, 1500);
+      });
+
+      const p3 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("p3 rejected");
+        }, 3500);
+      });
+
+      const p4 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p4 rejected");
+        }, 1000);
+      });
+
+      const p5 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p5 resolved");
+        }, 4000);
+      });
+
+      const p6 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p6 rejected");
+        }, 3000);
+      });
+
+      const p7 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("p7 resolved");
+        }, 15000);
+      });
+
+      const p8 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve("p8 resolved");
+        }, 12000);
+      });
+
+      const p9 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p9 rejected");
+        }, 7000);
+      });
+
+      const p10 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p10 rejected");
+        }, 17000);
+      });
+
+      const p11 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p11 rejected");
+        }, 4000);
+      });
+
+      const p12 = new Promise((resolve, reject) => {
+        setTimeout(() => {
+          reject("p12 rejected");
+        }, 5000);
+      });
+
+      //  Promise.all()---makes parallel promise calls
+
+      //   when all are success--(3) ['p1 resolved', 'p2 resolved', 'p3 resolved']---after 3500 ms
+
+      //when one fails---p3 rejected--after 3500 ms--if p2 failed then after 1500 ms err mssg p2 rejected
+
+      // it does not care for other promises if one of the promise fails
+
+      Promise.all([p1, p2, p3])
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      //  Promise.allSetteled()---makes parallel promise calls
+
+      //   when all are success--(3) [{…}, {…}, {…}]---after 3500 ms--we get the values in the form of obejcts
+
+      //when one fails--- 0:{status: 'rejected', reason: 'p4 rejected'} 1: {status: 'fulfilled', value: 'p5 resolved'} 2: {status: 'rejected', reason: 'p6 rejected'} length: 3 [[Prototype]]: Array(0)---we get an array of the results---both error and success---it will go through all the promises and wait for the one which takes the most amount of time to get settled
+
+      // even if all the promise fails then also it gives array of errors and it doesn't give an Aggregate Error
+
+      Promise.allSettled([p4, p5, p6])
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      //  Promise.race()---makes parallel promise calls---gives us the value of the <b>first settled(which is either resolved or rejected) promise</b>,gives us just the value of the first settled promsie---time taken will be the time taken for the first promise to be settled
+
+      Promise.race([p7, p8, p9])
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      //  Promise.any()---makes parallel promise calls---gives us the value of the <b>first resolved promise</b>,gives us just the value of the first resolved promsie---time taken will be the time taken for the first promise to be resolved
+
+      // if all the promise fails/rejected---then we get an Aggregate Error--- AggregateError: All promises were rejected
+
+      // Aggregate Error contains the error values in the form of an array---time taken will be the highest of the time taken by the promise  to get rejected
+
+      Promise.any([p10, p11, p12])
+        .then((data) => {
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log(error); //to check the aggregate error mssg
+          console.log(error.errors); // to check the array
+        });
+    </script>
+  </body>
+</html>
